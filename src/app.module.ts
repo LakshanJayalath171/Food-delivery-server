@@ -4,6 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { CloudinaryModule } from './cloudinary/cloudinary.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { UserModule } from './user/user.module.js';
+import { AdminModule } from './admin/admin.module.js';
 
 @Module({
   imports: [
@@ -20,6 +23,12 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module.js';
     }),
 
     CloudinaryModule,
+
+    AuthModule,
+
+    UserModule,
+
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
