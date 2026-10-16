@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { userDocument } from './schemas/user.schema.js';
-import { RegisterDto } from './dto/user.dto.js';
+import { LoginDto, RegisterDto } from './dto/user.dto.js';
 import * as bcrypt from 'bcryptjs';
 
 
@@ -13,6 +13,7 @@ export class UserService {
         @InjectModel('User') private readonly userModel: Model<userDocument>
     ) {}
 
+    // add new user to the database
     async signUp(registerDto: RegisterDto){
         const { first_name, last_name, email, password } = registerDto;
 
@@ -42,4 +43,5 @@ export class UserService {
         };
 
     }
+    
 }

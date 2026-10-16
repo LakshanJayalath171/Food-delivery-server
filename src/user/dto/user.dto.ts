@@ -21,3 +21,15 @@ export class RegisterDto{
     @MaxLength(72)
     password:string;
 }
+
+export class LoginDto{
+    @IsEmail()
+    @IsNotEmpty()
+    @MaxLength(256)
+    email:string;
+
+    @IsNotEmpty()
+    @MinLength(8)
+    @MaxLength(72)
+    password:string;
+}
