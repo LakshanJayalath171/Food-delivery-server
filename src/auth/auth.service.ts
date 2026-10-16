@@ -40,4 +40,6 @@ export class AuthService {
             token: token
         }
     }
+
+    
 }
