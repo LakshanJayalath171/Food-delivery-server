@@ -7,6 +7,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UserModule } from './user/user.module.js';
 import { AdminModule } from './admin/admin.module.js';
+import { CategoriesModule } from './categories/categories.module.js';
+import { ProductModule } from './product/product.module.js';
 
 @Module({
   imports: [
@@ -29,6 +31,10 @@ import { AdminModule } from './admin/admin.module.js';
     UserModule,
 
     AdminModule,
+
+    CategoriesModule,
+
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
