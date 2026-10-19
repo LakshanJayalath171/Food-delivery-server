@@ -18,7 +18,12 @@ export class Category{
 
     @Prop({
         default:''
-    }) image:string
+    }) image_url:string
+
+    @Prop({
+        default:'',
+        required:true
+    }) image_id:string
 
     @Prop({
         required:true,

@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { categoryDocument ,Category } from './schema/category.schema.js';
+
+
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
-  }
+    constructor(@InjectModel(Category.name) private readonly categoryModel: Model<categoryDocument>) {}
+    
+  async create(categoryDto: CreateCategoryDto){
+        const { name, description, image_url, image_id, availability, num_of_products } = categoryDto;
 
-  findAll() {
-    return `This action returns all categories`;
-  }
+        const existingCategory = await this.categoryModel
+      .findOne({
+        name: { $regex: `^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
+      })
+      .exec();
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
+      if(existingCategory){
+        throw new ConflictException(`Category with name "${name}" already exists.`);
+      }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
+      const category = await this.categoryModel.create({
+        name,
+        description,
+        image_url,
+        image_id,
+        availability,
+        num_of_products
+      })
+      
+      return{
+        message:'Category created successfully',
+        categoryName:category.name
+      }
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
-  }
+      findAll() {
+        return this.categoryModel.find().exec();
+      }
+
+      findOne(id: number) {
+        return this.categoryModel.findById(String(id)).exec();
+      }
+
+      update(id: number, updateCategoryDto: UpdateCategoryDto) {
+        return this.categoryModel
+          .findByIdAndUpdate(String(id), updateCategoryDto, { new: true, runValidators: true })
+          .exec();
+      }
+
+      remove(id: number) {
+        return this.categoryModel.findByIdAndDelete(String(id)).exec();
+      }
 }
