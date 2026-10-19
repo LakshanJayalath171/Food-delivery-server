@@ -11,6 +11,7 @@ export class OrdersService {
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>
     ) {}
     
+    // create a new order
     async createOrder(orderDto: orderDto){
 
         // validate items array
@@ -47,4 +48,29 @@ export class OrdersService {
             throw new BadRequestException(message);
         }
     }
+
+    // get all orders
+    async getAllOrders(){
+        const orders = await this.orderModel.find().exec();
+        return {
+            success:true,
+            message:'Orders retrieved successfully',
+            orders:orders
+        };
+    }
+
+    // get order by id
+    async getOrderById(orderId: string){
+        const order = await this.orderModel.findById(orderId).exec();
+        if(!order){
+            throw new BadRequestException('Order not found');
+        }
+        return {
+            success:true,
+            message:'Order retrieved successfully',
+            order:order
+        };
+    }
+
+    
 }
