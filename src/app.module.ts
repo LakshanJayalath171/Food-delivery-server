@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { ProductModule } from './product/product.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ import { ProductModule } from './product/product.module.js';
     CategoriesModule,
 
     ProductModule,
+
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
