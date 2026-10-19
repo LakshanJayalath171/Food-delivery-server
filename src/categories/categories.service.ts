@@ -4,57 +4,73 @@ import { UpdateCategoryDto } from './dto/update-category.dto.js';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import { categoryDocument ,Category } from './schema/category.schema.js';
-
+import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
+import { categoryDocument, Category } from './schema/category.schema.js';
+import { error } from 'console';
 
 @Injectable()
 export class CategoriesService {
-    constructor(@InjectModel(Category.name) private readonly categoryModel: Model<categoryDocument>) {}
-    
-  async create(categoryDto: CreateCategoryDto){
-        const { name, description, image_url, image_id, availability, num_of_products } = categoryDto;
+  constructor(
+    @InjectModel(Category.name)
+    private readonly categoryModel: Model<categoryDocument>,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
-        const existingCategory = await this.categoryModel
+  async create(categoryDto: CreateCategoryDto, file: Express.Multer.File) {
+    const {
+      name,
+      description,
+      image_url,
+      image_id,
+      availability = true,
+      num_of_products = 0,
+    } = categoryDto;
+
+    // Check if a category with the same name already exists (case-insensitive)
+    const existingCategory = await this.categoryModel
       .findOne({
-        name: { $regex: `^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
+        name: {
+          $regex: `^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+          $options: 'i',
+        },
       })
       .exec();
 
-      if(existingCategory){
-        throw new ConflictException(`Category with name "${name}" already exists.`);
-      }
+    if (existingCategory) {
+      throw new ConflictException(
+        `Category with name "${name}" already exists.`,
+      );
+    }
 
+    // upload image to cloudinary and get the image_url and image_id
+
+    const uploadImage = await this.cloudinaryService.uploadImage(file);
+
+    try {
       const category = await this.categoryModel.create({
         name,
         description,
-        image_url,
-        image_id,
+        image_url: uploadImage.imageUrl,
+        image_id: uploadImage.imageId,
         availability,
-        num_of_products
-      })
-      
-      return{
-        message:'Category created successfully',
-        categoryName:category.name
+        num_of_products,
+      });
+
+      return {
+        success: true,
+        message: 'Category created successfully',
+      };
+    } catch (error) {
+      // clean the cloudinary image if category creation fails
+      try {
+        await this.cloudinaryService.deleteImage(uploadImage.imageId);
+      } catch (cleanError) {
+        console.error(
+          'Failed to clean up Cloudinary image after category creation failure:',
+          cleanError,
+        );
       }
     }
-
-      findAll() {
-        return this.categoryModel.find().exec();
-      }
-
-      findOne(id: number) {
-        return this.categoryModel.findById(String(id)).exec();
-      }
-
-      update(id: number, updateCategoryDto: UpdateCategoryDto) {
-        return this.categoryModel
-          .findByIdAndUpdate(String(id), updateCategoryDto, { new: true, runValidators: true })
-          .exec();
-      }
-
-      remove(id: number) {
-        return this.categoryModel.findByIdAndDelete(String(id)).exec();
-      }
+    throw error;
+  }
 }

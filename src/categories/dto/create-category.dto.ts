@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsBoolean , IsString , IsNotEmpty , MaxLength, IsNumber, IsOptional } from "class-validator";
 
 export class CreateCategoryDto {
@@ -19,9 +20,27 @@ export class CreateCategoryDto {
     @IsString()
     image_id?:string
 
+    @IsOptional()
     @IsBoolean()
+    @Transform(({ value }) => {
+        if(value ==='' || value === undefined || value === null){
+            return true
+        }
+        {if(value === 'true' || value === true){
+            return true
+        } else {
+            return false
+        }}
+    })
     availability:boolean
 
+    @IsOptional()
     @IsNumber()
+    @Transform(({ value }) => {
+        if(value ==='' || value === undefined || value === null){
+            return 0
+        }
+        return Number(value)
+    })
     num_of_products:number
 }

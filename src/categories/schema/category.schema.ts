@@ -17,7 +17,7 @@ export class Category{
     }) description:string
 
     @Prop({
-        default:''
+       default:''
     }) image_url:string
 
     @Prop({
