@@ -12,9 +12,5 @@ export class OrdersController {
         return this.ordersService.createOrder(orderDto);
     }
       
-    @Get(':id')
-    getOrderById(@Param('id') id: string) {
-        return this.ordersService.getOrderById(id);
-    }
 
 }

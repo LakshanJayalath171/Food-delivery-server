@@ -19,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  // create product with image upload
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -48,4 +49,5 @@ export class ProductController {
 
     return this.productService.create(createProductDto, file);
   }
+
 }

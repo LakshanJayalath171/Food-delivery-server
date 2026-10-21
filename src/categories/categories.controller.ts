@@ -59,11 +59,4 @@ export class CategoriesController {
     );
   }
 
-  // get all product for user
-  @Get()
-  async findAll() {
-    return this.categoriesService.findAll();
-  }
-
-  
 }

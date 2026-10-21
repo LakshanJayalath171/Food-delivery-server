@@ -4,13 +4,18 @@ import { Model } from 'mongoose';
 import { userDocument } from './schemas/user.schema.js';
 import { LoginDto, RegisterDto } from './dto/user.dto.js';
 import * as bcrypt from 'bcryptjs';
-
+import { OrderDocument } from '../orders/schema/orders.schema.js';
+import { categoryDocument } from '../categories/schema/category.schema.js';
+import { productDocument } from '../product/schema/product.schema.js';
 
 @Injectable()
 export class UserService {
 
     constructor(
-        @InjectModel('User') private readonly userModel: Model<userDocument>
+        @InjectModel('User') private readonly userModel: Model<userDocument>,
+        @InjectModel('Category') private readonly categoryModel: Model<categoryDocument>,
+        @InjectModel('Order') private readonly orderModel: Model<OrderDocument>,
+        @InjectModel('Product') private readonly productModel: Model<productDocument>
     ) {}
 
     // add new user to the database
@@ -42,6 +47,77 @@ export class UserService {
             message:"New user created successfully",
         };
 
+    }
+
+    // get all products for user
+    async getAllProducts() {
+        const products = await this.productModel.find().exec();
+
+        if(!products || products.length === 0) {
+            return {
+                success: false,
+                message: "No products found"
+            }
+        }
+
+        return {
+            success: true,
+            message: "Products retrieved successfully",
+            data: products
+        }
+    }
+
+    // get all categories for user
+    async getAllCategories() {
+        const categories = await this.categoryModel.find().exec();
+
+        if(!categories || categories.length === 0) {
+            return {
+                success: false,
+                message: "No categories found"
+            }
+        }
+
+        return {
+            success: true,
+            message: "Categories retrieved successfully",
+            data: categories
+        }
+    }
+    // get all own orders for user
+    async getOwnOrders(userId: string) {
+        const orders = await this.orderModel.find({ user_id: userId }).exec();
+
+        if(!orders || orders.length === 0) {
+            return {
+                success: false,
+                message: "No orders found"
+            }
+        }
+
+        return {
+            success: true,
+            message: "Orders retrieved successfully",
+            data: orders
+        }
+    }
+
+    // get latest 3 orders for user
+    async getLatestOrders(userId: string) {
+        const latestOrders = await this.orderModel.find({ user_id: userId }).sort({ createdAt: -1 }).limit(3).exec();
+
+        if(!latestOrders || latestOrders.length === 0) {
+            return {
+                success: false,
+                message: "No orders found"
+            }
+        }
+
+        return {
+            success: true,
+            message: "Latest orders retrieved successfully",
+            data: latestOrders
+        }
     }
     
 }

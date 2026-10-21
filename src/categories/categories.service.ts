@@ -16,6 +16,7 @@ export class CategoriesService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  // cerate a new category
   async create(categoryDto: CreateCategoryDto, file: Express.Multer.File) {
     const {
       name,
@@ -74,23 +75,4 @@ export class CategoriesService {
     throw error;
   }
 
-  // get all categories
-  async findAll() {
-    const category = await this.categoryModel.find().exec();
-
-    if(!category || category.length === 0){
-      return {
-        success: false,
-        message: 'No categories found',
-      };
-    }
-
-    return {
-      success: true,
-      message: 'Categories fetched successfully',
-      data: category,
-    };
-  }
-
-  
 }
