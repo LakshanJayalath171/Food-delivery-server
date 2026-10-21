@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -57,4 +58,12 @@ export class CategoriesController {
       file,
     );
   }
+
+  // get all product for user
+  @Get()
+  async findAll() {
+    return this.categoriesService.findAll();
+  }
+
+  
 }
