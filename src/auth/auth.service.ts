@@ -81,7 +81,15 @@ export class AuthService {
             success: true,
             message: 'User login successful',
             token: token,
-            data : user
+            data : {
+                first_name:user.first_name,
+                last_name:user.last_name,
+                email:user.email,
+                mobile:user.phone_number,
+                birthday:user.date_of_birth,
+                favorite_dishes:user.favorite_dishes,
+                address:user.addresses,
+            }
         }
 
     }
