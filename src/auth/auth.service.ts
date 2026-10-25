@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AdminLoginDto } from './dto/admin-login.dto.js';
@@ -92,5 +92,20 @@ export class AuthService {
             }
         }
 
+    }
+
+    // get user profile method
+    async getUserProfile(authenticatedUser: {
+        user_id:string
+    }){
+        const user = await this.userModel.findById(authenticatedUser.user_id).select('-password').lean();
+        if(!user){
+            throw new NotFoundException('User not found');
+        }
+        return {
+            success: true,
+            message: 'User profile fetched successfully',
+            data: user
+        }
     }
 }
