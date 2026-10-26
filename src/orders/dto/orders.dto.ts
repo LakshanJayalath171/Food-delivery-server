@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsMongoId, IsNotEmpty, IsNumber, IsString, ValidateNested} from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsMongoId, IsNotEmpty, IsNumber, IsString, ValidateNested} from 'class-validator';
 
 export class orderItem{
     @IsMongoId()
@@ -30,15 +30,19 @@ export class address{
 
     @IsString()
     @IsNotEmpty()
-    city: string;
+    street: string;
 
     @IsString()
     @IsNotEmpty()
-    state: string;
+    city: string;
 
     @IsNotEmpty()
-    @IsNumber()
+    @IsString()
     postal_code: number;
+
+    @IsBoolean()
+    @IsNotEmpty()
+    is_default: boolean;
 }
 
 
@@ -71,5 +75,5 @@ export class orderDto{
 
     @IsNumber()
     @IsNotEmpty()
-    totalPrice: number;
+    total_price: number;
 }

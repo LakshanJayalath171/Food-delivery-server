@@ -29,6 +29,7 @@ export class OrderItem {
         required:true
     })
     image_url:string
+
 }
 
 export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
@@ -42,15 +43,19 @@ export class address{
 
     @Prop({
         required:true
+    }) street:string
+
+    @Prop({
+        required:true
     }) city:string
 
     @Prop({
         required:true
-    }) state:string
+    }) postal_code:number
 
     @Prop({
         required:true
-    }) postal_code:number
+    }) is_default:boolean
 }
 
 export const addressSchema = SchemaFactory.createForClass(address);
@@ -89,7 +94,7 @@ export class Order {
     @Prop({
         required:true
     })
-    total:string
+    total_price:string
 
     @Prop({
         enum:['pending','confirmed' , 'preparing' , 'out-for-delivery','completed','cancelled'],

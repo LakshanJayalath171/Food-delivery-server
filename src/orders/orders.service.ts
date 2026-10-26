@@ -29,18 +29,18 @@ export class OrdersService {
         const totalPrice = orderDto.items.reduce((acc, item) => acc + (item.product_price * item.quantity), 0);
 
         // validate total price
-        if(totalPrice !== orderDto.totalPrice){
+        if(totalPrice !== orderDto.total_price){
             throw new BadRequestException('Total price does not match the sum of item prices');
         }
 
         const order = await this.orderModel.create({
             ...orderDto,
-            total: totalPrice.toString()
+            total_price: totalPrice.toString()
         })
         return {
             success:true,
             message:'Order created successfully',
-            order_id:order._id
+            order_id:order.user_id
         };
         }
         catch(error){
