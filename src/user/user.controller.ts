@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { RegisterDto } from './dto/user.dto.js';
+import { UpdateUserDto } from './dto/updateUser.dto.js';
 
 
 @Controller('user')
@@ -34,5 +35,10 @@ export class UserController {
   @Get('latest-orders/:id')
   async getLatestOrders(@Param('id') id: string) {
     return this.userService.getLatestOrders(id);
+  }
+
+  @Put('update-profile/:id')
+  async updateUserProfile(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateUserProfile(id, updateUserDto);
   }
 }

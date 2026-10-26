@@ -28,7 +28,7 @@ export class Address{
     @Prop({
         required:true,
         trim:true
-    }) label:string;
+    }) lane:string;
 
     @Prop({
         required:true,
@@ -71,6 +71,7 @@ export class User{
         required:true,
         unique:true,
         trim:true,
+        lowercase:true,
     }) email:string;
 
     @Prop({
@@ -82,7 +83,7 @@ export class User{
     }) phone_number:string;
 
     @Prop({
-        default:''
+        default:Date
     }) date_of_birth:Date;
 
     @Prop({
