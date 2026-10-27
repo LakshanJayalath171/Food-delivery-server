@@ -210,30 +210,6 @@ export class AdminService {
         };
     }
 
-    // change order status by id
-    async changeOrderStatusById(id: string, status: string) {
-        const order = await this.orderModel.findByIdAndUpdate(id, {
-
-            $set:{
-                status
-            }
-        }, { new: true }).exec();
-
-        if(!order){
-            return{
-                success:false,
-                message:"Can't find this order"
-            }
-        }
-
-
-        return {
-            success:true,
-            message:'Order status updated successfully',
-            status:order.status
-        };
-    }
-
     // change category availability by id
     async changeCategoryAvailabilityById(id: string, availability: boolean) {
         const category = await this.categoryModel.findByIdAndUpdate(id, {
@@ -277,6 +253,54 @@ export class AdminService {
             success:true,
             message:'Product availability updated successfully',
             availability:product.availability
+        };
+    }
+
+    // change order status by id
+    async changeOrderStatusById(id: string, status: string) {
+
+        const validStatuses = ['pending','confirmed' , 'preparing' , 'out-for-delivery','completed','cancelled'];
+        if(!validStatuses.includes(status)){
+            return{
+                success:false,
+                message:"Invalid status"
+            }
+        }
+
+        const isCurrentStatusCompletedOrCancelled = await this.orderModel.findOne({ _id: id, status: { $in: ['completed', 'cancelled'] } }).exec();
+        if (isCurrentStatusCompletedOrCancelled) {
+            return {
+                success: false,
+                message: "Cannot change status of a completed or cancelled order"
+            };
+        }
+
+        const isSameStatus = await this.orderModel.findOne({ _id: id, status: status }).exec();
+        if (isSameStatus) {
+            return {
+                success: false,
+                message: "Order is already in the specified status"
+            };
+        }
+
+        const order = await this.orderModel.findByIdAndUpdate(id, {
+
+            $set:{
+                status
+            }
+        }, { new: true }).exec();
+
+        if(!order){
+            return{
+                success:false,
+                message:"Can't find this order"
+            }
+        }
+
+        return {
+            success:true,
+            message:'Order status updated successfully',
+            status:order.status
         };
     }
 }

@@ -78,4 +78,16 @@ export class AdminController {
     return this.adminService.changeOrderStatusById(id, updateData.status);
   }
   
+  // change category availability by id
+  @Put('change-category-availability/:id')
+  async changeCategoryAvailabilityById(@Param('id') id: string, @Body() updateData: any) {
+    return this.adminService.changeCategoryAvailabilityById(id, updateData.availability);
+  }
+
+  // change product availability by id
+  @Put('change-product-availability/:id')
+  async changeProductAvailabilityById(@Param('id') id: string, @Body() updateData: any) {
+    return this.adminService.changeProductAvailabilityById(id, updateData.availability);
+  }
+  
 }
