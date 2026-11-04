@@ -19,6 +19,11 @@ export class UserController {
     return this.userService.getAllProducts();
   }
 
+  @Get('products/:id')
+  async getProductById(@Param('id') id: string) {
+    return this.userService.getProductById(id);
+  }
+
   // get all categories for user
   @Get('categories')
   async getAllCategories() {
@@ -35,6 +40,12 @@ export class UserController {
   @Get('latest-orders/:id')
   async getLatestOrders(@Param('id') id: string) {
     return this.userService.getLatestOrders(id);
+  }
+
+  // get order by id
+  @Get('get-order/:id')
+  async getOrder(@Param('id') id: string) {
+    return this.userService.getOrderById(id)
   }
 
   @Put('update-profile/:id')

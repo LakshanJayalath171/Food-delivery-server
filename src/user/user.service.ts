@@ -68,6 +68,23 @@ export class UserService {
         }
     }
 
+    // get product by id
+    async getProductById(id: string) {
+      const product = await this.productModel.findById(id)
+
+      if(!product) {
+        return {
+          success: false,
+          message: "Product not found"
+        }
+      }
+
+      return {
+        success: true,
+        product: product
+      }
+    }
+
     // get all categories for user
     async getAllCategories() {
         const categories = await this.categoryModel.find().exec();
@@ -101,6 +118,22 @@ export class UserService {
             message: "Orders retrieved successfully",
             data: orders
         }
+    }
+
+    // get order by Id
+    async getOrderById(id: string) {
+      const order = await this.orderModel.findById(id).exec();
+      if(!order) {
+        return {
+          success: false,
+          message: "Order not found"
+        }
+      }
+      return {
+        success: true,
+        message: "Order retrieved successfully",
+        data: order
+      }
     }
 
     // get latest 3 orders for user
