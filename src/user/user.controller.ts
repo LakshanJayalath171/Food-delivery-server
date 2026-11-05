@@ -36,7 +36,7 @@ export class UserController {
     return this.userService.getOwnOrders(id);
   }
 
-  // get latest 3  orders for user
+  // get ongoing  orders for user
   @Get('latest-orders/:id')
   async getLatestOrders(@Param('id') id: string) {
     return this.userService.getLatestOrders(id);

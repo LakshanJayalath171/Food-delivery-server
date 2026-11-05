@@ -136,24 +136,38 @@ export class UserService {
       }
     }
 
-    // get latest 3 orders for user
-    async getLatestOrders(userId: string) {
-        const latestOrders = await this.orderModel.find({ user_id: userId }).sort({ createdAt: -1 }).limit(3).exec();
 
-        if(!latestOrders || latestOrders.length === 0) {
-            return {
-                success: false,
-                message: "No orders found"
-            }
-        }
+  // Get  ongoing orders for a user
+  async getLatestOrders(userId: string) {
 
-        return {
-            success: true,
-            message: "Latest orders retrieved successfully",
-            data: latestOrders
+    const latestOrders = await this.orderModel
+      .find({
+        user_id: userId,
+        status: {
+          $in: [
+            'pending',
+            'confirmed',
+            'preparing',
+            'out-for-delivery'
+          ]
         }
+      })
+      .sort({ createdAt: -1 })
+      .exec();
+
+    if (!latestOrders || latestOrders.length === 0) {
+      return {
+        success: false,
+        message: "No ongoing orders found"
+      };
     }
 
+    return {
+      success: true,
+      message: "Latest ongoing orders retrieved successfully",
+      data: latestOrders
+    };
+  }
     // update user profile
     async updateUserProfile(
         userId: string,
