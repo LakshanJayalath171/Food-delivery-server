@@ -1,124 +1,175 @@
+# 🍔 Crave – Food Delivery Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <strong>A scalable REST API backend for the Crave food delivery application.</strong>
+  <br />
+  Built with NestJS, TypeScript, MongoDB and Cloudinary.
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📖 About the Project
 
-## Project setup
+**Crave Backend** is the server-side application powering Crave, an online food delivery platform.
+
+It provides RESTful APIs for user authentication, product management, category management, customer profiles and order processing. It also provides the backend infrastructure required for the mobile application and admin dashboard.
+
+The backend is developed using **NestJS and TypeScript**, with **MongoDB** for data persistence and **Cloudinary** for image storage.
+
+The architecture is organized into modular components to make the application easier to maintain, extend and scale.
+
+## ✨ Features
+
+### 🔐 Authentication & Authorization
+- User registration and login.
+- Admin authentication.
+- JWT-based authentication.
+- Password hashing using bcrypt.
+- Protected API endpoints.
+- Role-based access control for users and administrators.
+
+### 👤 User Management
+- Create and manage user accounts.
+- Retrieve user profile information.
+- Update personal information.
+- Manage delivery addresses.
+- Manage favorite dishes.
+
+### 🍔 Product Management
+- Create and manage food products.
+- Retrieve available products.
+- Retrieve product details.
+- Update product information.
+- Manage product prices and availability.
+- Support product offers and discounted prices.
+- Store product images using Cloudinary.
+
+### 📂 Category Management
+- Create and manage food categories.
+- Retrieve all categories.
+- Update category information.
+- Manage category images.
+- Track the number of products associated with categories.
+- Prevent duplicate category names.
+
+### 🛒 Order Management
+- Create customer orders.
+- Retrieve customer orders.
+- Retrieve orders for administration.
+- Update order statuses.
+- Manage order information and delivery details.
+
+### ☁️ Cloud Image Management
+- Upload product images.
+- Upload category images.
+- Store image URLs and Cloudinary identifiers.
+- Manage uploaded media through Cloudinary.
+
+### ⚡ Real-Time Order Updates
+**Development status: In progress**
+
+The planned real-time functionality uses WebSockets to notify customers when administrators change their order status.
+
+Expected workflow:
+
+1. Customer places an order.
+2. The order appears in the admin dashboard.
+3. Administrator updates the order status.
+4. Backend sends a real-time notification.
+5. Customer receives the updated order status without manually refreshing the application.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| NestJS | Backend framework |
+| TypeScript | Programming language |
+| Node.js | JavaScript runtime |
+| MongoDB | NoSQL database |
+| Mongoose | MongoDB object modeling |
+| JWT | Authentication |
+| bcrypt | Password hashing |
+| Cloudinary | Image and media storage |
+| Axios | HTTP communication from clients |
+| class-validator | Request validation |
+| class-transformer | Data transformation |
+| WebSocket / Socket.IO | Real-time communication (if enabled) |
+
+---
+
+
+## ⚙️ Getting Started
+
+Follow these instructions to run the backend locally.
+
+### 1. Prerequisites
+
+Make sure you have installed:
+
+- Node.js
+- npm
+- MongoDB (local installation or MongoDB Atlas account)
+- Git
+- Cloudinary account
+
+### 2. Clone the Repository
 
 ```bash
-$ npm install
+git clone YOUR_REPOSITORY_URL
 ```
 
-## Compile and run the project
+Navigate into the project:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd crave-backend
 ```
 
-## Run tests
+### 3. Install Dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 4. Configure Environment Variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Create a `.env` file in the root directory.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🔐 Security & Validation
 
-## Observability
+The backend uses security and validation mechanisms to protect API operations.
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+- JWT-based authentication.
+- Password hashing with bcrypt.
+- Role-based access restrictions.
+- Request validation using NestJS ValidationPipe.
+- Whitelisted DTO properties.
+- Rejection of unexpected request properties.
+- Environment-based secret configuration.
+- Protected administrative operations.
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+The global validation configuration can be implemented using:
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
 
-To add it to this project:
 
-```bash
-$ npm install @nestjs/observe
-```
+## 👨‍💻 Author
 
-Then follow the [setup guide](https://docs.nestjs.com/observability/overview) - it takes a single import and an app key.
+**Crave – Food Delivery Application**
 
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
+Backend developed using NestJS, TypeScript and MongoDB.
 
-## Resources
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+<p align="center">
+  <strong>Crave – Bringing your favorite food closer to you. 🍔</strong>
+</p>
