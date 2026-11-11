@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Order, OrderDocument } from './schema/orders.schema.js';
 import { Model } from 'mongoose';
 import { orderDto } from './dto/orders.dto.js';
+import { OrdersGateway } from './orders.gateway.js';
 
 @Injectable()
 export class OrdersService {
 
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>
+        , private readonly OrdersGateway: OrdersGateway
     ) {}
     
     // create a new order
@@ -37,6 +39,10 @@ export class OrdersService {
             ...orderDto,
             total_price: totalPrice.toString()
         })
+
+        // notify admin about new order
+        this.OrdersGateway.server.to('admin').emit('new-order', order);
+
         return {
             success:true,
             message:'Order created successfully',
