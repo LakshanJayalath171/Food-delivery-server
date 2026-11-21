@@ -336,12 +336,11 @@ export class AdminService {
 
     // Notify the specific customer
     this.ordersGateway.server
-      .to(`user:${order._id}`)
+      .to(`user:${order.user_id.toString()}`)
       .emit('order-status-updated', {
-        orderId: order._id,
+        orderId: order._id.toString(),
         status: order.status,
       });
-
 
     return {
       success: true,

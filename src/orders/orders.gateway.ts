@@ -7,6 +7,7 @@ import {
 
 import { Server, Socket } from 'socket.io';
 import { JwtStrategy } from '../auth/jwt.strategy.js';
+import { JwtService } from '@nestjs/jwt';
 
 @WebSocketGateway({
   cors: {
@@ -14,51 +15,58 @@ import { JwtStrategy } from '../auth/jwt.strategy.js';
     credentials: true,
   },
 })
-
 export class OrdersGateway implements OnGatewayConnection, OnGatewayDisconnect {
-    @WebSocketServer()
-    server: Server;
+  @WebSocketServer()
+  server: Server;
 
-    constructor(
-        private readonly JwtStrategy: JwtStrategy
-    ) {}
+  constructor(
+    private readonly JwtStrategy: JwtStrategy,
+    private readonly JwtService: JwtService,
+  ) {}
 
-    afterInit(server: Server) {
-        server.use(async(client , next) => {
-            try{
-                const token = client.handshake.auth.token;
-                if(!token) {
-                    return next(new Error('unauthorized'));
-                }
+  afterInit(server: Server) {
+    server.use(async (client, next) => {
+      try {
+        const token = client.handshake.auth.token;
 
-                const payload = await this.JwtStrategy.validate(token);
-                client.data.user = payload;
-                next();
-            }
-            catch(err){
-                next(new Error('unauthorized'));
-            }
-        })
-    }
-
-    async handleConnection(client: Socket) {
-        const user = client.data.user;
-
-        const userId = user.userId;
-
-        if(user.role !== 'admin') {
-            await client.join('admin');
-            console.log(`admin joined admin room`);
+        if (!token) {
+          return next(new Error('Unauthorized'));
         }
 
-        if(user.role === 'admin') {
-            await client.join(`user-${userId}`);
-            console.log(`admin joined user-${userId} room`);
-        }
-        console.log(`Client connected: ${client.id}`);
+        // Verify and decode JWT
+        const payload = await this.JwtService.verifyAsync(token);
+
+        // Transform decoded payload using JwtStrategy
+        const user = this.JwtStrategy.validate(payload);
+
+        client.data.user = user;
+
+        next();
+      } catch (error) {
+        next(new Error('Unauthorized'));
+      }
+    });
+  }
+
+  async handleConnection(client: Socket) {
+    const user = client.data.user;
+
+    console.log('Decoded JWT Payload:', user);
+
+    const userId = user.user_id;
+
+    if (user.role === 'admin') {
+      await client.join('admin');
+      console.log('Admin joined admin room');
+    } else {
+      await client.join(`user:${userId}`);
+      console.log(`Customer joined user:${userId} room`);
     }
 
-    handleDisconnect(client: Socket) {
-        console.log(`Client disconnected: ${client.id}`);
-    }
+    console.log(`Client connected: ${client.id}`);
+  }
+
+  handleDisconnect(client: Socket, reason?: string) {
+    console.log(`Client disconnected: ${client.id}`, reason ?? '');
+  }
 }

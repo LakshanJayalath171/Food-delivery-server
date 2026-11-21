@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { userDocument } from './schemas/user.schema.js';
@@ -11,146 +15,141 @@ import { UpdateUserDto } from './dto/updateUser.dto.js';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<userDocument>,
+    @InjectModel('Category')
+    private readonly categoryModel: Model<categoryDocument>,
+    @InjectModel('Order') private readonly orderModel: Model<OrderDocument>,
+    @InjectModel('Product')
+    private readonly productModel: Model<productDocument>,
+  ) {}
 
-    constructor(
-        @InjectModel('User') private readonly userModel: Model<userDocument>,
-        @InjectModel('Category') private readonly categoryModel: Model<categoryDocument>,
-        @InjectModel('Order') private readonly orderModel: Model<OrderDocument>,
-        @InjectModel('Product') private readonly productModel: Model<productDocument>
-    ) {}
+  // add new user to the database
+  async signUp(registerDto: RegisterDto) {
+    const { first_name, last_name, email, password } = registerDto;
 
-    // add new user to the database
-    async signUp(registerDto: RegisterDto){
-        const { first_name, last_name, email, password } = registerDto;
+    // normalize the email to lowercase
+    const normalizedEmail = email.toLowerCase();
 
-        // normalize the email to lowercase
-        const normalizedEmail = email.toLowerCase();
-
-        // check if the user already exists
-        const existingUser = await this.userModel.findOne({ email: normalizedEmail });
-        if (existingUser) {
-            throw new ConflictException('User already exists');
-        }
-
-        // hashing the password
-        const salt  = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // create a new user
-        const newUser = await this.userModel.create({
-            first_name,
-            last_name,
-            email: normalizedEmail,
-            password: hashedPassword
-        });
-
-        return {
-            message:"New user created successfully",
-        };
-
+    // check if the user already exists
+    const existingUser = await this.userModel.findOne({
+      email: normalizedEmail,
+    });
+    if (existingUser) {
+      throw new ConflictException('User already exists');
     }
 
-    // get all products for user
-    async getAllProducts() {
-        const products = await this.productModel.find().exec();
+    // hashing the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-        if(!products || products.length === 0) {
-            return {
-                success: false,
-                message: "No products found"
-            }
-        }
+    // create a new user
+    const newUser = await this.userModel.create({
+      first_name,
+      last_name,
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
 
-        return {
-            success: true,
-            message: "Products retrieved successfully",
-            data: products
-        }
-    }
+    return {
+      message: 'New user created successfully',
+    };
+  }
 
-    // get product by id
-    async getProductById(id: string) {
-      const product = await this.productModel.findById(id)
+  // get all products for user
+  async getAllProducts() {
+    const products = await this.productModel.find().exec();
 
-      if(!product) {
-        return {
-          success: false,
-          message: "Product not found"
-        }
-      }
-
+    if (!products || products.length === 0) {
       return {
-        success: true,
-        product: product
-      }
+        success: false,
+        message: 'No products found',
+      };
     }
 
-    // get all categories for user
-    async getAllCategories() {
-        const categories = await this.categoryModel.find().exec();
+    return {
+      success: true,
+      message: 'Products retrieved successfully',
+      data: products,
+    };
+  }
 
-        if(!categories || categories.length === 0) {
-            return {
-                success: false,
-                message: "No categories found"
-            }
-        }
+  // get product by id
+  async getProductById(id: string) {
+    const product = await this.productModel.findById(id);
 
-        return {
-            success: true,
-            message: "Categories retrieved successfully",
-            data: categories
-        }
-    }
-    // get all own orders for user
-    async getOwnOrders(userId: string) {
-        const orders = await this.orderModel.find({ user_id: userId }).exec();
-
-        if(!orders || orders.length === 0) {
-            return {
-                success: false,
-                message: "No orders found"
-            }
-        }
-
-        return {
-            success: true,
-            message: "Orders retrieved successfully",
-            data: orders
-        }
-    }
-
-    // get order by Id
-    async getOrderById(id: string) {
-      const order = await this.orderModel.findById(id).exec();
-      if(!order) {
-        return {
-          success: false,
-          message: "Order not found"
-        }
-      }
+    if (!product) {
       return {
-        success: true,
-        message: "Order retrieved successfully",
-        data: order
-      }
+        success: false,
+        message: 'Product not found',
+      };
     }
 
+    return {
+      success: true,
+      product: product,
+    };
+  }
+
+  // get all categories for user
+  async getAllCategories() {
+    const categories = await this.categoryModel.find().exec();
+
+    if (!categories || categories.length === 0) {
+      return {
+        success: false,
+        message: 'No categories found',
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Categories retrieved successfully',
+      data: categories,
+    };
+  }
+  // get all own orders for user
+  async getOwnOrders(userId: string) {
+    const orders = await this.orderModel.find({ user_id: userId }).exec();
+
+    if (!orders || orders.length === 0) {
+      return {
+        success: false,
+        message: 'No orders found',
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Orders retrieved successfully',
+      data: orders,
+    };
+  }
+
+  // get order by Id
+  async getOrderById(id: string) {
+    const order = await this.orderModel.findById(id).exec();
+    if (!order) {
+      return {
+        success: false,
+        message: 'Order not found',
+      };
+    }
+    return {
+      success: true,
+      message: 'Order retrieved successfully',
+      data: order,
+    };
+  }
 
   // Get  ongoing orders for a user
   async getLatestOrders(userId: string) {
-
     const latestOrders = await this.orderModel
       .find({
         user_id: userId,
         status: {
-          $in: [
-            'pending',
-            'confirmed',
-            'preparing',
-            'out-for-delivery'
-          ]
-        }
+          $in: ['pending', 'confirmed', 'preparing', 'out-for-delivery'],
+        },
       })
       .sort({ createdAt: -1 })
       .exec();
@@ -158,64 +157,63 @@ export class UserService {
     if (!latestOrders || latestOrders.length === 0) {
       return {
         success: false,
-        message: "No ongoing orders found"
+        message: 'No ongoing orders found',
       };
     }
 
     return {
       success: true,
-      message: "Latest ongoing orders retrieved successfully",
-      data: latestOrders
+      message: 'Latest ongoing orders retrieved successfully',
+      data: latestOrders,
     };
   }
-    // update user profile
-    async updateUserProfile(
-        userId: string,
-        updateProfileDto: UpdateUserDto
-    ) {
-        if (!Types.ObjectId.isValid(userId)) {
-            throw new NotFoundException('User not found');
-        }
-        // normalize the email to lowercase if it exists in the updateProfileDto
-        const updateData = { ...updateProfileDto };
+  
+  // update user profile
+  async updateUserProfile(userId: string, updateProfileDto: UpdateUserDto) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new NotFoundException('User not found');
+    }
+    // normalize the email to lowercase if it exists in the updateProfileDto
+    const updateData = { ...updateProfileDto };
 
-        if (updateData.email) {
-            updateData.email = updateData.email.toLowerCase();
+    if (updateData.email) {
+      updateData.email = updateData.email.toLowerCase();
 
-            const existingUser = await this.userModel.findOne({ email: updateData.email, _id: { $ne: userId } });
-            if (existingUser) {
-                throw new ConflictException('Email already in use by another user');
-            }
-        }
-
-        try{
-            const updatedUser = await this.userModel
-            .findByIdAndUpdate(
-                userId,
-                {
-                    $set: updateProfileDto,
-                },
-                {
-                    new: true,
-                    runValidators: true,
-                },
-            )
-            .select('-password')
-            .lean();
-
-        if (!updatedUser) {
-            throw new NotFoundException('User not found');
-        }
-
-        return {
-            success: true,
-            message: 'Profile updated successfully',
-            data: updatedUser,
-        };
-        }
-        catch (error) {
-            throw new NotFoundException('User not found');
-        }
+      const existingUser = await this.userModel.findOne({
+        email: updateData.email,
+        _id: { $ne: userId },
+      });
+      if (existingUser) {
+        throw new ConflictException('Email already in use by another user');
+      }
     }
 
+    try {
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(
+          userId,
+          {
+            $set: updateProfileDto,
+          },
+          {
+            new: true,
+            runValidators: true,
+          },
+        )
+        .select('-password')
+        .lean();
+
+      if (!updatedUser) {
+        throw new NotFoundException('User not found');
+      }
+
+      return {
+        success: true,
+        message: 'Profile updated successfully',
+        data: updatedUser,
+      };
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
+  }
 }
