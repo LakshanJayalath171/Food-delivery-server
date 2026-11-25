@@ -46,7 +46,7 @@ export class OrdersService {
         return {
             success:true,
             message:'Order created successfully',
-            order_id:order.user_id
+            order_id:order._id
         };
         }
         catch(error){
