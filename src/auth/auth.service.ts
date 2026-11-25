@@ -31,7 +31,6 @@ export class AuthService {
             throw new UnauthorizedException('Invalid admin credentials');
         }
 
-
         // create JWt payload
         const payload = {
             sub: email,
@@ -43,6 +42,7 @@ export class AuthService {
 
         return {
             success: true,
+            role:"admin",
             message: 'Admin login successful',
             token: token
         }
@@ -89,7 +89,9 @@ export class AuthService {
                 birthday:user.date_of_birth,
                 favorite_dishes:user.favorite_dishes,
                 address:user.addresses,
-            }
+                role: 'user'
+            },
+            
         }
 
     }
@@ -105,7 +107,10 @@ export class AuthService {
         return {
             success: true,
             message: 'User profile fetched successfully',
-            data: user
+            data: {
+                ...user,
+                role: 'user'
+            }
         }
     }
 }
